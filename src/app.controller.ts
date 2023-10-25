@@ -59,22 +59,18 @@ export class AppController {
   }
 
   @Put('products/:id')
-  updateProduct(@Param('id') id: number, @Body() updatedProduct): any {
-    const productIndex = this.products.findIndex(
-      (product) => product.id === id,
-    );
+  updateProduct(@Param('id') id: number, @Body() data): any {
+    let newProduct: { id: number; name: string; precio: number; stock: number };
 
-    if (productIndex === -1) {
-      return { message: `Producto con ID ${id} no encontrado` };
-    }
-
-    // Actualiza el producto con los nuevos datos
-    this.products[productIndex] = {
-      ...this.products[productIndex],
-      ...updatedProduct,
-    };
-
-    return this.products[productIndex];
+    this.products.map((product) => {
+      if (product.id === +id) {
+        product.name = data.name;
+        product.precio = data.precio;
+        product.stock = data.stock;
+        newProduct = product;
+      }
+    });
+    return newProduct;
   }
 
   @Delete(':id')
